@@ -1,7 +1,7 @@
 import json, time, itertools, sys
 
-def check_anagram(word, letters, length):
-    slice = len(word) - length
+def check_anagram(word, letters):
+    slice = len(letters) - len(word)
     
     if slice == 0:
         return sorted(word) == sorted(letters), word
@@ -36,7 +36,7 @@ def main():
         
     while True:
         scramble = (input('Please input the nine letters provided: ')).lower()
-        if len(scramble) == 9:
+        if len(scramble) == max_letters:
             break
         else:
             print('Invalid number of letters, try again.')
@@ -44,16 +44,17 @@ def main():
     start_time = time.time()
     
     for i in range(max_letters, 1, -1):
+        result_bool = False
         current = wordlist_dict[i]
         
         for word in current:
-            if len(word) == 9:
-                result_bool, result_word = check_anagram(word, scramble, max_letters)
-                if result_bool:
-                    print(result_word)
-                    sys.exit()
-            else:
-                print('penis')
+            result_bool, result_word = check_anagram(word, scramble)
+            if result_bool:
+                print(result_word)
+                break
+            
+        if result_bool:
+            break
     
     print(f'Quickest time: {time.time() - start_time}s')
 
