@@ -1,6 +1,6 @@
-import json, time, itertools
+import json, time, itertools, sys
 
-def check_string(word, letters, length):
+def check_anagram(word, letters, length):
     slice = len(word) - length
     
     if slice == 0:
@@ -19,6 +19,7 @@ def check_string(word, letters, length):
         
         if boolean:
             return boolean, word
+        
 
 def main():
     with open('wordlist.json', 'r') as read_file:
@@ -46,10 +47,13 @@ def main():
         current = wordlist_dict[i]
         
         for word in current:
-            result_bool, result_word = check_string(word, scramble, i)
-            if result_bool:
-                print(result_word)
-                break
+            if len(word) == 9:
+                result_bool, result_word = check_anagram(word, scramble, max_letters)
+                if result_bool:
+                    print(result_word)
+                    sys.exit()
+            else:
+                print('penis')
     
     print(f'Quickest time: {time.time() - start_time}s')
 
