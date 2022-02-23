@@ -1,4 +1,5 @@
 import re, warnings
+from tqdm import tqdm
 from bs4 import BeautifulSoup
 from pathlib import Path
 from selenium import webdriver
@@ -39,17 +40,20 @@ def main():
         
     try:
         browser.get(url)
-        WebDriverWait(browser, 10).until(expected_conditions.presence_of_element_located((By.CLASS_NAME, 'image')))
+        WebDriverWait(browser, 10).until(expected_conditions.presence_of_element_located((By.CLASS_NAME, 'top-g')))
         source = browser.page_source
         browser.close()
         
         soup = BeautifulSoup(source, 'html.parser')
+        word_list = []
         
-        table = soup.find_all('ul', class_ = 'top-g')
+        table = soup.find_all('ul', class_ = 'top-g')[0]
         
-        for row in table.find_all('li'):
+        for row in tqdm(table.find_all('li')):
             for word in row.find_all('a', href = True):
-                print(tag_cleanup(word))
+                word_list.append(tag_cleanup(word))
+                
+        print(len(word_list))
     
     except TimeoutException:
         try:
