@@ -42,7 +42,7 @@ def main():
         browser.get(url)
         WebDriverWait(browser, 10).until(expected_conditions.presence_of_element_located((By.CLASS_NAME, 'top-g')))
         source = browser.page_source
-        browser.close()
+        browser.quit()
         
         soup = BeautifulSoup(source, 'html.parser')
         wordlist = []
