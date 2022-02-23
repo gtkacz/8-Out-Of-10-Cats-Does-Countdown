@@ -1,10 +1,7 @@
-import json, time, collections
+import json, time
 
 def check_string(word, letters):
-    letters = letters.split()
-    word = word.split()
-    
-    return collections.Counter(letters) == collections.Counter(word)
+    return sorted(word)== sorted(letters), word
 
 def main():
     with open('wordlist.json', 'r') as read_file:
@@ -32,9 +29,9 @@ def main():
         current = wordlist_dict[i]
         
         for word in current:
-            result = check_string(word, scramble)
-            if result:
-                print(result)
+            result_bool, result_word = check_string(word, scramble)
+            if result_bool:
+                print(result_word)
                 break
     
     print(f'Quickest time: {time.time() - start_time}s')
