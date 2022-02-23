@@ -1,4 +1,4 @@
-import json
+import json, time
 
 def main():
     with open('wordlist.json', 'r') as read_file:
@@ -19,6 +19,10 @@ def main():
             break
         else:
             print('Invalid number of letters, try again.')
+            
+    start_time = time.time()
+    
+    print(f'Quickest time: {time.time() - start_time}s')
 
 if __name__ == '__main__':
     main()
