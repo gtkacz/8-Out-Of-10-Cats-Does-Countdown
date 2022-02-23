@@ -1,4 +1,4 @@
-import re, warnings
+import re, warnings, json
 from tqdm import tqdm
 from bs4 import BeautifulSoup
 from pathlib import Path
@@ -45,15 +45,17 @@ def main():
         browser.close()
         
         soup = BeautifulSoup(source, 'html.parser')
-        word_list = []
+        wordlist = []
         
         table = soup.find_all('ul', class_ = 'top-g')[0]
         
         for row in tqdm(table.find_all('li')):
             for word in row.find_all('a', href = True):
-                word_list.append(tag_cleanup(word))
+                wordlist.append(tag_cleanup(word))
                 
-        print(len(word_list))
+        file_str = json.dumps(wordlist)
+        with open('wordlist.json', 'w') as f:
+            f.write(file_str)
     
     except TimeoutException:
         try:
