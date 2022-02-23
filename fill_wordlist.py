@@ -1,6 +1,4 @@
-import re, sys, html, requests, os
-from tqdm import tqdm
-from lxml import etree
+import re, warnings
 from bs4 import BeautifulSoup
 from pathlib import Path
 from selenium import webdriver
@@ -18,6 +16,8 @@ def tag_cleanup(html):
     return string
 
 def main():
+    warnings.filterwarnings('ignore')
+    
     url = r'https://www.oxfordlearnersdictionaries.com/us/wordlists/oxford3000-5000'
     
     CUR_DIR = Path(__file__).parent
@@ -36,6 +36,26 @@ def main():
         OPTIONS.binary_location = BINARY
         OPTIONS.add_experimental_option('excludeSwitches', ['enable-logging'])
         browser = webdriver.Chrome(PATH, options=OPTIONS)
+        
+    try:
+        browser.get(url)
+        WebDriverWait(browser, 10).until(expected_conditions.presence_of_element_located((By.CLASS_NAME, 'image')))
+        source = browser.page_source
+        browser.close()
+        
+        soup = BeautifulSoup(source, 'html.parser')
+        
+        table = soup.find_all('ul', class_ = 'top-g')
+        
+        for row in table.find_all('li'):
+            for word in row.find_all('a', href = True):
+                print(tag_cleanup(word))
+    
+    except TimeoutException:
+        try:
+            browser.quit()
+        finally:
+            print('Site too long to respond.')
     
 if __name__ == '__main__':
     main()
