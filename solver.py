@@ -1,7 +1,24 @@
-import json, time
+import json, time, itertools
 
-def check_string(word, letters):
-    return sorted(word)== sorted(letters), word
+def check_string(word, letters, length):
+    slice = len(word) - length
+    
+    if slice == 0:
+        return sorted(word) == sorted(letters), word
+    
+    letters_list = list(letters)
+    
+    combinations = list(itertools.permutations(letters_list))
+    
+    for t in combinations:
+        t = t[:-slice]
+        
+        joined = "".join(t)
+        
+        boolean = sorted(word) == sorted(joined)
+        
+        if boolean:
+            return boolean, word
 
 def main():
     with open('wordlist.json', 'r') as read_file:
@@ -29,7 +46,7 @@ def main():
         current = wordlist_dict[i]
         
         for word in current:
-            result_bool, result_word = check_string(word, scramble)
+            result_bool, result_word = check_string(word, scramble, i)
             if result_bool:
                 print(result_word)
                 break
